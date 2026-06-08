@@ -4,39 +4,41 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>久兵衛屋 App — Tài liệu tính năng</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
   :root {
     --bg: #f5f7fb; --card: #ffffff; --border: #e3e8f0; --text: #1f2937; --text-dim: #5b6776;
     --accent: #2563eb; --accent-soft: #eaf1ff; --green: #0f9d6f; --green-soft: #e4f6ef;
     --orange: #d97706; --orange-soft: #fdf1e1; --red: #dc2626; --red-soft: #fdeaea;
-    --gray: #6b7280; --gray-soft: #eceef2; --jp: #7c3aed; --jp-soft: #f1ebfe;
+    --gray: #6b7280; --gray-soft: #eceef2; --jp: #7c3aed; --jp-soft: #f1ebfe; --purple:#7c3aed;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Hiragino Sans", "Yu Gothic", Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
-  a { color: inherit; text-decoration: none; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
+  /* ===== SPA pages ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+  .page.active.layout { display: flex; }
+
+  /* ===== INDEX HUB ===== */
   .wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px 100px; }
-
-  .hero { background: linear-gradient(135deg,#2563eb,#1e3a8a); color: #fff; padding: 56px 48px 52px; border-radius: 0 0 28px 28px; margin-bottom: 8px; }
-  .hero .wrap { padding-bottom: 0; }
-  .hero .eyebrow { font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b9ccff; font-weight: 700; }
-  .hero h1 { font-size: 2.4rem; margin: 10px 0 12px; }
-  .hero p { font-size: 1.12rem; color: #dbe6ff; max-width: 640px; margin: 0; }
-  .hero .meta { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 26px; }
-  .hero .meta div { font-size: 0.9rem; color: #c7d6ff; }
-  .hero .meta b { display: block; font-size: 1.5rem; color: #fff; }
-
+  .index-hero { background: linear-gradient(135deg,#2563eb,#1e3a8a); color: #fff; padding: 56px 48px 52px; border-radius: 0 0 28px 28px; margin-bottom: 8px; }
+  .index-hero .eyebrow { font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; color: #b9ccff; font-weight: 700; }
+  .index-hero h1 { font-size: 2.4rem; margin: 10px 0 12px; color:#fff; }
+  .index-hero p { font-size: 1.12rem; color: #dbe6ff; max-width: 640px; margin: 0; }
+  .index-hero .meta { display: flex; flex-wrap: wrap; gap: 26px; margin-top: 26px; }
+  .index-hero .meta div { font-size: 0.9rem; color: #c7d6ff; }
+  .index-hero .meta b { display: block; font-size: 1.5rem; color: #fff; }
   .search-bar { margin: 30px 0 8px; }
-  #search { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border); background: #fff; font-size: 1rem; outline: none; box-shadow: 0 1px 3px rgba(16,24,40,0.05); }
-  #search:focus { border-color: var(--accent); }
-
+  .search-bar .search-input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border); background: #fff; font-size: 1rem; outline: none; box-shadow: 0 1px 3px rgba(16,24,40,0.05); }
+  .search-bar .search-input:focus { border-color: var(--accent); }
   .section-title { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 800; margin: 38px 0 16px; }
-
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-
   .feature { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 24px 22px; box-shadow: 0 1px 3px rgba(16,24,40,0.04); transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; position: relative; overflow: hidden; }
-  .feature:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(37,99,235,0.13); border-color: #c2d4f7; }
+  .feature:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(37,99,235,0.13); border-color: #c2d4f7; text-decoration: none; }
   .feature.ready { cursor: pointer; }
   .feature.soon { opacity: 0.7; }
   .feature .ic { font-size: 2.1rem; }
@@ -48,21 +50,112 @@
   .feature .cta { font-size: 0.9rem; font-weight: 700; color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
   .feature .badge-soon { position: absolute; top: 16px; right: 16px; font-size: 0.68rem; font-weight: 800; padding: 3px 10px; border-radius: 20px; background: var(--gray-soft); color: var(--gray); text-transform: uppercase; letter-spacing: 0.04em; }
   .feature .stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
-
-  .no-results { display: none; color: var(--orange); padding: 24px; background: var(--orange-soft); border-radius: 12px; margin-top: 20px; }
-  .no-results.show { display: block; }
-
   footer { text-align: center; color: var(--text-dim); font-size: 0.85rem; margin-top: 60px; }
 
-  @media (max-width: 640px) { .hero { padding: 40px 24px; } .hero h1 { font-size: 1.8rem; } .wrap { padding: 0 18px 80px; } }
+  /* ===== DETAIL LAYOUT ===== */
+  .sidebar { width: 300px; background: var(--card); border-right: 1px solid var(--border); position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  .sidebar-header { padding: 22px 22px 14px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--card); z-index: 5; }
+  .sidebar-header h1 { margin: 0; font-size: 1.1rem; }
+  .sidebar-header .sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 4px; }
+  .back-link { display: inline-block; font-size: 0.82rem; color: var(--text-dim); margin-bottom: 10px; font-weight: 600; cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; }
+  .back-link:hover { color: var(--accent); text-decoration: none; }
+  .sidebar-header .search-input { width: 100%; margin-top: 14px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; color: var(--text); font-size: 0.9rem; outline: none; }
+  .sidebar-header .search-input:focus { border-color: var(--accent); }
+  .nav-list { list-style: none; padding: 12px 12px 40px; margin: 0; }
+  .nav-list a { display: block; padding: 7px 14px; border-radius: 8px; color: var(--text-dim); font-size: 0.88rem; }
+  .nav-list a:hover { background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+  .nav-list a.group { color: var(--text); font-weight: 700; margin-top: 14px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .content { flex: 1; padding: 36px 56px 120px; max-width: 1080px; min-width: 0; }
+  section { margin-bottom: 56px; scroll-margin-top: 20px; }
+  section.hidden-by-search { display: none; }
+
+  h2 { font-size: 1.65rem; margin-top: 0; display: flex; align-items: center; gap: 12px; }
+  h2 .n { background: var(--accent); color: #fff; min-width: 36px; height: 36px; padding:0 8px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  h3 { font-size: 1.26rem; margin-top: 34px; }
+  h4 { font-size: 1.05rem; margin-top: 22px; }
+  p.lead { font-size: 1.07rem; color: var(--text-dim); }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 26px; margin: 18px 0; box-shadow: 0 1px 3px rgba(16,24,40,0.04); }
+  .diagram { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin: 20px 0; overflow-x: auto; box-shadow: 0 1px 3px rgba(16,24,40,0.04); }
+  .diagram .cap { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .mermaid { text-align: center; }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; margin: 20px 0; }
+  .steps > li { position: relative; padding: 0 0 26px 56px; }
+  .steps > li:before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 0; width: 36px; height: 36px; border-radius: 11px; background: var(--accent); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .steps > li:after { content: ""; position: absolute; left: 17px; top: 38px; bottom: 0; width: 2px; background: var(--border); }
+  .steps > li:last-child:after { display: none; }
+  .steps > li .title { font-weight: 700; font-size: 1.02rem; }
+  .steps > li .desc { color: var(--text-dim); margin-top: 2px; }
+
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.93rem; background: var(--card); border-radius: 10px; overflow: hidden; }
+  th, td { border: 1px solid var(--border); padding: 10px 13px; text-align: left; vertical-align: top; }
+  th { background: #f0f4fb; font-weight: 700; }
+
+  .jp { background: var(--jp-soft); border-radius: 6px; padding: 1px 7px; color: var(--jp); font-weight: 600; }
+  td .tran { display: block; color: var(--text-dim); font-size: 0.85rem; margin-top: 3px; }
+  .jp-block { background: var(--jp-soft); border-left: 4px solid var(--jp); border-radius: 0 8px 8px 0; padding: 10px 16px; margin: 8px 0; }
+  .jp-block .orig { color: var(--jp); font-weight: 700; }
+  .jp-block .tran { color: var(--text-dim); font-size: 0.9rem; margin-top: 2px; }
+
+  .badge { padding: 3px 11px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; white-space: nowrap; display:inline-block; }
+  .b-blue { background: var(--accent-soft); color: var(--accent); }
+  .b-green, .b-done { background: var(--green-soft); color: var(--green); }
+  .b-orange, .b-resend { background: var(--orange-soft); color: var(--orange); }
+  .b-red, .b-reject { background: var(--red-soft); color: var(--red); }
+  .b-gray, .b-wait, .b-other { background: var(--gray-soft); color: var(--gray); }
+  .b-purple { background: var(--jp-soft); color: var(--purple); }
+
+  .note { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0; }
+  .note.tip { border-color: var(--green); background: var(--green-soft); }
+  .note.warn { border-color: var(--orange); background: var(--orange-soft); }
+  .note.danger { border-color: var(--red); background: var(--red-soft); }
+  .note .ic { font-weight: 700; }
+
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 0.84rem; font-weight: 600; }
+
+  .dash { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 14px; margin: 18px 0; }
+  .tile { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center; box-shadow: 0 1px 3px rgba(16,24,40,0.04); }
+  .tile .ic { font-size: 1.7rem; }
+  .tile .num { font-size: 1.6rem; font-weight: 800; color: var(--accent); margin-top: 4px; }
+  .tile .lbl { font-size: 0.82rem; color: var(--text-dim); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
+  .legend span { font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 13px; height: 13px; border-radius: 4px; display: inline-block; }
+
+  .grid2, .branch { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .grid2 .opt, .branch .opt { border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--card); }
+  .grid2 .opt h4, .branch .opt h4 { margin-top: 0; }
+  @media (max-width: 860px) { .grid2, .branch { grid-template-columns: 1fr; } .content { padding: 24px; } .sidebar { width: 240px; } }
+
+  .faq { margin: 12px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+  .faq[open] summary { border-radius: 10px 10px 0 0; }
+  .faq .ans { border: 1px solid var(--border); border-top: none; border-radius: 0 0 10px 10px; padding: 14px 18px; color: var(--text-dim); }
+
+  .hero { background: linear-gradient(135deg,#2563eb,#1e40af); color:#fff; border-radius: 18px; padding: 32px 36px; margin-bottom: 28px; }
+  .hero h2 { color:#fff; } .hero h2 .n { background: rgba(255,255,255,0.22); }
+  .hero p { color:#dbe6ff; margin-bottom: 0; }
+
+  .no-results { display: none; color: var(--orange); padding: 18px 20px; background: var(--orange-soft); border-radius: 12px; margin: 16px 0; }
+  .no-results.show { display: block; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background: #cdd5e0; border-radius: 5px; }
 </style>
 </head>
 <body>
-  <header class="hero">
+
+<!-- ============================================================= -->
+<!-- PAGE: INDEX (TRANG TỔNG) -->
+<!-- ============================================================= -->
+<div class="page active" id="page-index">
+  <header class="index-hero">
     <div class="wrap" style="padding-bottom:0">
       <div class="eyebrow">久兵衛屋 · Tài liệu ứng dụng</div>
       <h1>Tổng hợp tính năng &amp; luồng xử lý</h1>
-      <p>Trang tổng cho toàn bộ tài liệu mô tả luồng nghiệp vụ của app. Chọn một tính năng để mở trang chi tiết — viết cho mọi vai trò (QA, nghiệp vụ, khách hàng) đọc hiểu được.</p>
+      <p>Trang tổng cho toàn bộ tài liệu mô tả luồng nghiệp vụ của app. Chọn một tính năng để mở phần chi tiết — viết cho mọi vai trò (QA, nghiệp vụ, khách hàng) đọc hiểu được.</p>
       <div class="meta">
         <div><b>2</b>tính năng có tài liệu</div>
         <div><b>16+</b>luồng nghiệp vụ</div>
@@ -73,14 +166,14 @@
 
   <main class="wrap">
     <div class="search-bar">
-      <input type="text" id="search" placeholder="🔍 Tìm tính năng... (nhấn / để focus)" autocomplete="off">
+      <input type="text" class="search-input" id="indexSearch" placeholder="🔍 Tìm tính năng... (nhấn / để focus)" autocomplete="off">
     </div>
-    <div class="no-results" id="noResults">Không tìm thấy tính năng khớp với từ khóa.</div>
+    <div class="no-results" id="indexNoResults">Không tìm thấy tính năng khớp với từ khóa.</div>
 
     <div class="section-title">Tính năng đã có tài liệu</div>
-    <div class="grid" id="grid">
+    <div class="grid" id="featureGrid">
 
-      <a class="feature ready" href="zhome-flow.html" data-keywords="home màn hình chính trung tâm banner đặt chỗ booking takeout mua mang về coupon điểm point tooltip popup cửa hàng gần nhất lucky bag">
+      <a class="feature ready" onclick="showPage('home')" data-keywords="home màn hình chính trung tâm banner đặt chỗ booking takeout mua mang về coupon điểm point tooltip popup cửa hàng gần nhất lucky bag">
         <div class="stripe" style="background:var(--accent)"></div>
         <div class="ic">🏠</div>
         <h3>Màn hình Home <span class="jp">ホーム</span></h3>
@@ -89,7 +182,7 @@
         <span class="cta">Xem chi tiết →</span>
       </a>
 
-      <a class="feature ready" href="zclaim-flow.html" data-keywords="claim tích điểm ảnh hóa đơn khiếu nại receipt yêu cầu lịch sử gửi lại ảnh xác nhận trạng thái">
+      <a class="feature ready" onclick="showPage('claim')" data-keywords="claim tích điểm ảnh hóa đơn khiếu nại receipt yêu cầu lịch sử gửi lại ảnh xác nhận trạng thái">
         <div class="stripe" style="background:var(--green)"></div>
         <div class="ic">🧾</div>
         <h3>Tích điểm bằng ảnh hóa đơn <span class="jp">レシート申請</span></h3>
@@ -125,29 +218,915 @@
       </div>
     </div>
 
-    <footer>
-      Tài liệu nội bộ · 久兵衛屋 App v1.9.0 — cập nhật tự động khi thêm tính năng mới.
-    </footer>
+    <footer>Tài liệu nội bộ · 久兵衛屋 App v1.9.0 — một file tổng hợp toàn bộ tính năng.</footer>
   </main>
+</div>
+
+<!-- ============================================================= -->
+<!-- PAGE: HOME FLOW -->
+<!-- ============================================================= -->
+<div class="page layout" id="page-home">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="back-link" onclick="showPage('index')">← Trang tổng tính năng</button>
+      <h1>🏠 Màn hình Home (久兵衛屋)</h1>
+      <div class="sub">Luồng xử lý trực quan · mọi vai trò đọc được</div>
+      <input type="text" class="search-input" placeholder="🔍 Tìm nội dung..." autocomplete="off">
+    </div>
+    <ul class="nav-list">
+      <li><a class="group" href="#h-overview">Tổng quan</a></li>
+      <li><a href="#h-overview">Màn Home là gì?</a></li>
+      <li><a href="#h-blocks">Các khối hiển thị</a></li>
+      <li><a href="#h-master">Biểu đồ tải dữ liệu</a></li>
+
+      <li><a class="group" href="#h-flow-load">Luồng dữ liệu</a></li>
+      <li><a href="#h-flow-load">1. Tải Home &amp; làm mới</a></li>
+      <li><a href="#h-flow-banner">2. Banner &amp; thông báo</a></li>
+      <li><a href="#h-flow-store">3. Cửa hàng gần nhất</a></li>
+
+      <li><a class="group" href="#h-flow-dialog">Hộp thoại tự động</a></li>
+      <li><a href="#h-flow-dialog">4. Hàng đợi hộp thoại</a></li>
+      <li><a href="#h-flow-point">5. Cảnh báo điểm</a></li>
+      <li><a href="#h-flow-pizza">6. Coupon pizza sắp hết hạn</a></li>
+      <li><a href="#h-flow-email">7. Coupon email</a></li>
+      <li><a href="#h-flow-tooltip">8. Tooltip lần đầu</a></li>
+
+      <li><a class="group" href="#h-flow-booking">Đặt chỗ &amp; tiện ích</a></li>
+      <li><a href="#h-flow-booking">9. Đặt chỗ / vé / thử nghiệm</a></li>
+      <li><a href="#h-flow-takeout">10. Mua mang về</a></li>
+      <li><a href="#h-flow-badge">11. Dấu "chưa đọc"</a></li>
+
+      <li><a class="group" href="#h-enums">Quy tắc trạng thái</a></li>
+      <li><a href="#h-enums">Bảng trạng thái (enum)</a></li>
+      <li><a href="#h-events">Sự kiện Home</a></li>
+
+      <li><a class="group" href="#h-qa">Tham chiếu</a></li>
+      <li><a href="#h-qa">Điểm QA cần lưu ý</a></li>
+      <li><a href="#h-errors">Thông báo lỗi</a></li>
+      <li><a href="#h-faq">Câu hỏi thường gặp</a></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+    <div class="no-results">Không tìm thấy nội dung khớp với từ khóa.</div>
+
+    <section id="h-overview" data-keywords="tổng quan home màn hình chính hub trung tâm giới thiệu久兵衛屋">
+      <div class="hero">
+        <h2><span class="n">i</span> Màn hình Home là gì?</h2>
+        <p>Home là <strong>màn hình trung tâm</strong> của ứng dụng nhà hàng 久兵衛屋 — nơi tập hợp gần như mọi thông tin và lối đi: banner khuyến mãi, cửa hàng gần nhất, đặt chỗ, mua mang về, tích điểm, coupon, thông báo và các hộp thoại tự động.</p>
+      </div>
+      <p class="lead">Đây cũng là màn hình <strong>phức tạp nhất</strong>: dữ liệu đến từ <strong>4 nguồn (API)</strong> chính và được sắp xếp thành hơn 12 khối hiển thị tùy cấu hình. Tài liệu này giải thích logic bằng ngôn ngữ đời thường, kèm sơ đồ.</p>
+
+      <div class="dash">
+        <div class="tile"><div class="ic">🔌</div><div class="num">4</div><div class="lbl">nguồn dữ liệu (API)</div></div>
+        <div class="tile"><div class="ic">🧩</div><div class="num">12+</div><div class="lbl">khối hiển thị</div></div>
+        <div class="tile"><div class="ic">💬</div><div class="num">10+</div><div class="lbl">loại hộp thoại tự động</div></div>
+        <div class="tile"><div class="ic">💡</div><div class="num">2</div><div class="lbl">tooltip hướng dẫn</div></div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin-top:0">Home gom dữ liệu từ 4 nguồn:</h4>
+        <table>
+          <thead><tr><th>Nguồn</th><th>Mang về gì</th></tr></thead>
+          <tbody>
+            <tr><td><span class="b-blue badge">Danh sách Banner</span></td><td>Banner ngang/dọc, thông báo (notice), nút "mua mang về", các cờ bật/tắt tính năng, thời gian tự cuộn banner</td></tr>
+            <tr><td><span class="b-green badge">Thông tin Home</span></td><td>Hộp thoại tự động (popup), cảnh báo điểm, coupon pizza/email, badge khảo sát/khiếu nại, kiểm tra phiên bản app</td></tr>
+            <tr><td><span class="b-orange badge">Cập nhật dữ liệu người dùng</span></td><td>Gửi thông tin thiết bị/phiên bản lên máy chủ (chạy ngầm)</td></tr>
+            <tr><td><span class="b-purple badge">Đặt chỗ đang hoạt động</span></td><td>Vé / ghế đã đặt còn hiệu lực để hiển thị trên Home</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><span class="ic">📌 Quy ước:</span> Chữ tiếng Nhật thật trong app được tô <span class="jp">màu tím</span> kèm bản dịch tiếng Việt nhỏ bên cạnh.</div>
+    </section>
+
+    <section id="h-blocks" data-keywords="khối hiển thị thành phần banner nearest store booking takeout scan qr lucky bag tooltip">
+      <h2><span class="n">▦</span> Các khối hiển thị trên Home</h2>
+      <p>Home được ghép từ nhiều khối; mỗi khối chỉ hiện khi <strong>đủ điều kiện</strong> (có dữ liệu + cờ bật từ máy chủ).</p>
+      <table>
+        <thead><tr><th>#</th><th>Khối</th><th>Điều kiện hiện</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Banner ngang (tự cuộn)</td><td>Có nhiều hơn 1 banner ngang</td></tr>
+          <tr><td>2</td><td>Banner ngang đơn</td><td>Chỉ có 1 banner ngang</td></tr>
+          <tr><td>3</td><td>Thông báo (notice) — dạng chữ hoặc ảnh</td><td>Có dữ liệu notice</td></tr>
+          <tr><td>4</td><td>Banner dọc (danh sách)</td><td>Có banner dọc</td></tr>
+          <tr><td>5</td><td>Số thứ tự chờ <span class="jp">待ち順</span> (số đợi)</td><td>Bật tính năng số đợi</td></tr>
+          <tr><td>6</td><td>Vé đặt chỗ đang hoạt động</td><td>Có vé + bật đặt vé</td></tr>
+          <tr><td>7</td><td>Ghế đặt chỗ đang hoạt động (có đếm ngược)</td><td>Có ghế + bật đặt ghế</td></tr>
+          <tr><td>8</td><td>Nút đặt chỗ thử nghiệm (trial)</td><td>Bật chế độ trial + chưa có đặt chỗ thật</td></tr>
+          <tr><td>9</td><td>Nút mua mang về <span class="jp">持ち帰り注文</span></td><td>Trạng thái nút ≠ Ẩn</td></tr>
+          <tr><td>10</td><td>Nút quét QR tích điểm</td><td>Luôn hiện</td></tr>
+          <tr><td>11</td><td>Cửa hàng gần nhất <span class="jp">お近くの店舗</span></td><td>Bật tính năng + có quyền vị trí</td></tr>
+          <tr><td>12</td><td>Túi may mắn (Lucky Bag)</td><td>Bật Lucky Bag</td></tr>
+          <tr><td>13</td><td>Hộp thoại tự động (popup queue)</td><td>Sau khi tải xong dữ liệu</td></tr>
+          <tr><td>14</td><td>Tooltip hướng dẫn (lần đầu)</td><td>Cờ bật + chưa xem lần nào</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="h-master" data-keywords="biểu đồ tải dữ liệu master flow loading order banner home info booking active queue">
+      <h2><span class="n">★</span> Biểu đồ tải dữ liệu khi mở Home</h2>
+      <p class="lead">Khi mở Home, hệ thống tải dữ liệu theo trình tự rồi mới hiển thị hộp thoại tự động.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ tải dữ liệu tổng thể</div>
+        <pre class="mermaid">
+flowchart TD
+    O([Mở màn Home]) --> P{Vào từ thông báo<br/>đẩy push?}
+    P -- Có --> LC[Dùng dữ liệu đã lưu<br/>+ tải Thông tin Home]
+    P -- Không --> PAR[Tải song song]
+    PAR --> B[Danh sách Banner]
+    PAR --> U[Cập nhật dữ liệu người dùng]
+    U --> H[Thông tin Home]
+    B --> BK{Có bật đặt chỗ?}
+    BK -- Có --> A[Tải đặt chỗ đang hoạt động]
+    BK -- Không --> SKIP[Bỏ qua]
+    H --> CK
+    A --> CK
+    SKIP --> CK
+    LC --> CK
+    CK{Cả 3 nguồn<br/>đã tải xong?}
+    CK -- Chưa --> WAIT[Hiện từng khối<br/>ngay khi có dữ liệu]
+    CK -- Rồi --> Q[[Bật hàng đợi hộp thoại<br/>+ tooltip]]
+
+    classDef done fill:#e4f6ef,stroke:#0f9d6f,color:#0a6b4c;
+    class Q done;
+        </pre>
+      </div>
+      <div class="note tip"><span class="ic">💡 Logic chính:</span> Mỗi khối UI hiện ra <strong>ngay khi nguồn của nó có dữ liệu</strong> (không chờ tất cả). Nhưng các <strong>hộp thoại tự động và tooltip chỉ chạy khi cả 3 nguồn (Banner + Thông tin Home + Đặt chỗ) đã tải xong</strong>.</div>
+      <div class="note warn"><span class="ic">ℹ️ Nếu sơ đồ không hiện:</span> file cần Internet để vẽ biểu đồ (Mermaid). Phần chữ bên dưới vẫn đọc được khi offline.</div>
+    </section>
+
+    <section id="h-flow-load" data-keywords="luồng 1 tải home làm mới pull to refresh kéo refresh local cache offline">
+      <h2><span class="n">1</span> Luồng: Tải Home &amp; làm mới</h2>
+      <ol class="steps">
+        <li><div class="title">Mở màn / quay lại Home</div><div class="desc">Hệ thống bắt đầu tải dữ liệu lần đầu.</div></li>
+        <li><div class="title">Tải song song Banner + gửi dữ liệu người dùng</div><div class="desc">Banner hiển thị nhanh; phần gửi dữ liệu người dùng chạy ngầm rồi mới lấy "Thông tin Home".</div></li>
+        <li><div class="title">Tải đặt chỗ đang hoạt động</div><div class="desc">Chỉ khi tính năng đặt chỗ được bật.</div></li>
+        <li><div class="title">Hiển thị dần các khối</div><div class="desc">Mỗi khối hiện ra ngay khi có dữ liệu tương ứng.</div></li>
+        <li><div class="title">Kéo để làm mới (pull-to-refresh)</div><div class="desc">Khách vuốt xuống → tải lại Banner + dữ liệu, cập nhật toàn bộ.</div></li>
+      </ol>
+      <div class="note warn"><span class="ic">⚠️ Khi mất mạng:</span> Home dùng <strong>banner đã lưu trong máy</strong> để hiển thị tạm; khi có mạng lại sẽ tự tải bản mới. Nếu tải lỗi → hộp thoại lỗi kèm nút <span class="jp">リトライ</span> (Thử lại).</div>
+    </section>
+
+    <section id="h-flow-banner" data-keywords="luồng 2 banner ngang dọc notice thông báo tự cuộn slider click redirect navigate">
+      <h2><span class="n">2</span> Luồng: Banner &amp; thông báo</h2>
+      <div class="grid2">
+        <div class="opt">
+          <h4>🖼️ Banner</h4>
+          <ul>
+            <li><strong>Nhiều banner ngang</strong> → tự cuộn (thời gian cuộn do máy chủ quy định, đơn vị giây).</li>
+            <li><strong>1 banner ngang</strong> → hiện cố định.</li>
+            <li><strong>Banner dọc</strong> → danh sách cuộn; rỗng thì hiện chỗ trống <span class="jp">現在、表示できるバナーがありません。</span> <span style="color:var(--text-dim);font-size:.85rem">(Hiện chưa có banner)</span>.</li>
+          </ul>
+        </div>
+        <div class="opt">
+          <h4>📢 Thông báo (Notice)</h4>
+          <ul>
+            <li>Dạng <strong>chữ</strong>: ưu tiên cao → icon cảnh báo đỏ; thường → icon thông tin đen.</li>
+            <li>Dạng <strong>ảnh</strong>: hiển thị ảnh từ máy chủ.</li>
+          </ul>
+        </div>
+      </div>
+      <h4>Bấm vào banner/notice → đi đâu?</h4>
+      <table>
+        <thead><tr><th>Banner có gì</th><th>Hành động</th></tr></thead>
+        <tbody>
+          <tr><td>Có đường dẫn web (redirect)</td><td>Mở trang web (trong app hoặc trình duyệt ngoài)</td></tr>
+          <tr><td>Có lệnh điều hướng (navigate)</td><td>Chuyển sang màn tương ứng trong app (coupon, đặt chỗ...)</td></tr>
+        </tbody>
+      </table>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Banner đang tự cuộn sẽ <strong>tạm dừng</strong> khi mở web/chuyển màn, và <strong>tự chạy lại</strong> khi quay về Home. Cần kiểm thử việc dừng/chạy lại đúng.</div>
+    </section>
+
+    <section id="h-flow-store" data-keywords="luồng 3 cửa hàng gần nhất nearest store gps vị trí quyền permission 20km số đợi">
+      <h2><span class="n">3</span> Luồng: Cửa hàng gần nhất</h2>
+      <p class="lead">Hiển thị cửa hàng gần nhất kèm số nhóm đang chờ — cần quyền vị trí.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ xin quyền &amp; hiển thị cửa hàng</div>
+        <pre class="mermaid">
+flowchart TD
+    S([Khối Cửa hàng gần nhất]) --> P{Có quyền vị trí?}
+    P -- Không --> RP[Xin quyền vị trí]
+    RP --> P2{Khách cấp quyền?}
+    P2 -- Không --> M1[/※設定から位置情報を許可してください<br/>Hãy cấp quyền vị trí trong Cài đặt/]
+    P2 -- Có --> G
+    P -- Có --> G{GPS đang bật?}
+    G -- Không --> M2[/Nhắc bật GPS/]
+    G -- Có --> L[Lấy vị trí hiện tại]
+    L --> F{Có cửa hàng<br/>trong 20km?}
+    F -- Không --> M3[/※周辺（20km圏内）に店舗がありません<br/>Không có cửa hàng trong 20km/]
+    F -- Có --> D([Hiện tên cửa hàng + số đợi 待ち組数])
+
+    classDef warnNode fill:#fdf1e1,stroke:#d97706,color:#9a5b08;
+    class M1,M2,M3 warnNode;
+        </pre>
+      </div>
+      <div class="note"><span class="ic">ℹ️</span> Bấm vào cửa hàng gần nhất → mở chi tiết cửa hàng hoặc đặt chỗ. Số nhóm đang chờ hiển thị qua nhãn <span class="jp">待ち組数</span> (số nhóm chờ).</div>
+    </section>
+
+    <section id="h-flow-dialog" data-keywords="luồng 4 hàng đợi hộp thoại popup priority queue tần suất one time per day many time update">
+      <h2><span class="n">4</span> Luồng: Hàng đợi hộp thoại tự động</h2>
+      <p class="lead">Home có thể bật nhiều hộp thoại. Chúng được <strong>xếp hàng theo độ ưu tiên</strong> và hiện lần lượt — không chồng lên nhau.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ hàng đợi hộp thoại theo ưu tiên</div>
+        <pre class="mermaid">
+flowchart TD
+    A[Tải dữ liệu xong] --> B[Gom các hộp thoại đủ điều kiện]
+    B --> C[Xếp theo ưu tiên<br/>cao → thấp]
+    C --> D[Hiện hộp thoại ưu tiên cao nhất]
+    D --> E{Khách đóng?}
+    E -- Có --> F{Còn hộp thoại<br/>trong hàng đợi?}
+    F -- Còn --> D
+    F -- Hết --> G[Hiện tooltip hướng dẫn<br/>nếu lần đầu]
+
+    classDef done fill:#e4f6ef,stroke:#0f9d6f,color:#0a6b4c;
+    class G done;
+        </pre>
+      </div>
+      <h4>Thứ tự ưu tiên (cao = hiện trước)</h4>
+      <table>
+        <thead><tr><th>Ưu tiên</th><th>Hộp thoại</th></tr></thead>
+        <tbody>
+          <tr><td><span class="b-red badge">Cao nhất</span></td><td>Cập nhật ứng dụng (khi có phiên bản mới)</td></tr>
+          <tr><td><span class="b-orange badge">Cao</span></td><td>Thông báo/khuyến mãi mới · Coupon pizza sắp hết hạn · Coupon email</td></tr>
+          <tr><td><span class="b-blue badge">Trung bình</span></td><td>Cảnh báo tụt hạng · Điểm sắp hết hạn · Túi may mắn</td></tr>
+          <tr><td><span class="b-gray badge">Thấp nhất</span></td><td>Tooltip hướng dẫn (sau cùng)</td></tr>
+        </tbody>
+      </table>
+      <h4>Tần suất hiển thị một popup</h4>
+      <table>
+        <thead><tr><th>Loại tần suất</th><th>Quy tắc</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-blue">1 lần duy nhất</span></td><td>Chỉ hiện đúng một lần trong suốt vòng đời (đã hiện thì thôi)</td></tr>
+          <tr><td><span class="badge b-green">1 lần mỗi ngày</span></td><td>Mỗi ngày hiện lại một lần (so theo ngày của máy chủ)</td></tr>
+          <tr><td><span class="badge b-orange">Luôn hiện</span></td><td>Lần nào mở cũng hiện</td></tr>
+        </tbody>
+      </table>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Trong cùng một lần mở Home, sau khi một popup hiện thì các popup khác có thể vẫn hiện tiếp (theo hàng đợi), nhưng <strong>tooltip chỉ chạy khi không còn hộp thoại nào</strong>. Cần kiểm thử tần suất "1 lần/ngày" qua mốc đổi ngày.</div>
+    </section>
+
+    <section id="h-flow-point" data-keywords="luồng 5 cảnh báo điểm point info yohei hết hạn tụt hạng stage rank ステージ 失効">
+      <h2><span class="n">5</span> Luồng: Cảnh báo điểm (YOHEI)</h2>
+      <p class="lead">Home cảnh báo khi khách sắp <strong>mất điểm</strong> hoặc sắp <strong>bị tụt hạng thành viên</strong>.</p>
+      <div class="grid2">
+        <div class="opt">
+          <h4>⬇️ Sắp tụt hạng</h4>
+          <div class="jp-block"><span class="orig">お客様のステージが変わる可能性があります</span><span class="tran">Hạng thành viên của bạn có thể thay đổi</span></div>
+          <div class="jp-block"><span class="orig">今月あと◯YOHEI貯めることで ステージダウンを防ぐことができます</span><span class="tran">Tích thêm ◯ điểm YOHEI trong tháng để tránh bị tụt hạng</span></div>
+        </div>
+        <div class="opt">
+          <h4>⌛ Điểm sắp hết hạn</h4>
+          <div class="jp-block"><span class="orig">獲得から１年が経過したポイントが今月末に失効します</span><span class="tran">Điểm tích đã quá 1 năm sẽ hết hạn vào cuối tháng này</span></div>
+          <p>Nút <span class="jp">失効予定のポイントはこちら</span> <span style="color:var(--text-dim);font-size:.85rem">(Xem điểm sắp hết hạn)</span> → mở màn lịch sử điểm.</p>
+        </div>
+      </div>
+      <div class="note"><span class="ic">ℹ️ Logic:</span> Cảnh báo này hiện <strong>1 lần mỗi tháng</strong> — khi sang tháng mới (theo giờ máy chủ), hệ thống cho phép hiện lại.</div>
+    </section>
+
+    <section id="h-flow-pizza" data-keywords="luồng 6 coupon pizza sắp hết hạn ピザクーポン 有効期限 expiring dialog">
+      <h2><span class="n">6</span> Luồng: Coupon pizza sắp hết hạn</h2>
+      <ol class="steps">
+        <li><div class="title">Phát hiện coupon pizza sắp hết hạn</div><div class="desc">Dữ liệu đến từ "Thông tin Home".</div></li>
+        <li><div class="title">Hiện hộp thoại nhắc</div><div class="desc"><span class="jp">ご利用のピザクーポンの有効期限が近づいています</span> <span style="color:var(--text-dim);font-size:.85rem">(Coupon pizza của bạn sắp hết hạn)</span> · <span class="jp">有効期限：◯</span> (Hạn dùng: ◯).</div></li>
+        <li><div class="title">Khách chọn hành động</div><div class="desc">Bấm <span class="jp">クーポン一覧</span> (Danh sách coupon) → mở màn coupon. Đóng lại → ghi nhận đã hiện (không nhắc lại trong lần này).</div></li>
+      </ol>
+    </section>
+
+    <section id="h-flow-email" data-keywords="luồng 7 coupon email register super coupon を獲得しました クーポン一覧へ">
+      <h2><span class="n">7</span> Luồng: Coupon email (nhận coupon)</h2>
+      <ol class="steps">
+        <li><div class="title">Có coupon mới được trao</div><div class="desc">Dữ liệu đến từ "Thông tin Home".</div></li>
+        <li><div class="title">Hiện hộp thoại chúc mừng</div><div class="desc"><span class="jp">を獲得しました！</span> <span style="color:var(--text-dim);font-size:.85rem">(Bạn đã nhận được coupon!)</span></div></li>
+        <li><div class="title">Khách chọn hành động</div><div class="desc">Bấm <span class="jp">クーポン一覧へ</span> (Tới danh sách coupon) → mở màn coupon. Đóng/Hủy → xóa khỏi danh sách chờ hiện.</div></li>
+      </ol>
+    </section>
+
+    <section id="h-flow-tooltip" data-keywords="luồng 8 tooltip hướng dẫn lần đầu scan qr booking ポイントの登録 予約機能が追加されました">
+      <h2><span class="n">8</span> Luồng: Tooltip hướng dẫn (lần đầu)</h2>
+      <p class="lead">Bong bóng hướng dẫn chỉ hiện <strong>lần đầu</strong>, sau khi mọi dữ liệu đã tải xong và không còn hộp thoại nào.</p>
+      <div class="grid2">
+        <div class="opt">
+          <h4>📷 Tooltip quét QR tích điểm</h4>
+          <div class="jp-block"><span class="orig">ポイントの登録</span><span class="tran">Đăng ký tích điểm</span></div>
+          <div class="jp-block"><span class="orig">レシートのQRコードを読み取って、アプリポイント「YOHEI」の登録が出来ます。</span><span class="tran">Quét mã QR trên hóa đơn để tích điểm YOHEI trong app</span></div>
+        </div>
+        <div class="opt">
+          <h4>📅 Tooltip đặt chỗ</h4>
+          <div class="jp-block"><span class="orig">予約機能が追加されました</span><span class="tran">Đã thêm tính năng đặt chỗ</span></div>
+          <div class="jp-block"><span class="orig">こちらから「順番待ち」「予約」登録が可能です。</span><span class="tran">Tại đây bạn có thể đăng ký "xếp hàng chờ" và "đặt chỗ"</span></div>
+        </div>
+      </div>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Tooltip chỉ hiện khi: tải xong toàn bộ + không có hộp thoại nào + không đang xin quyền hệ thống + đúng cờ bật + <strong>chưa từng xem</strong>. Mỗi tooltip chỉ hiện một lần.</div>
+    </section>
+
+    <section id="h-flow-booking" data-keywords="luồng 9 đặt chỗ vé ghế trial thử nghiệm booking ticket seat status enum 予約 順番待ち">
+      <h2><span class="n">9</span> Luồng: Đặt chỗ / vé / thử nghiệm</h2>
+      <p class="lead">Tùy cấu hình máy chủ, Home cho phép đặt <strong>vé xếp hàng</strong>, <strong>đặt ghế</strong>, hoặc chế độ <strong>thử nghiệm (trial)</strong>.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ hiển thị nút đặt chỗ</div>
+        <pre class="mermaid">
+flowchart TD
+    A([Lấy trạng thái đặt chỗ]) --> S{Trạng thái?}
+    S -- Tắt tất cả --> H[Ẩn cả nút vé &amp; ghế]
+    S -- Bật cả hai --> B1[Cho đặt vé + đặt ghế]
+    S -- Chỉ vé --> B2[Chỉ cho đặt vé]
+    S -- Chỉ ghế --> B3[Chỉ cho đặt ghế]
+    S -- Thử nghiệm --> T{Có đặt chỗ<br/>thật đang hoạt động?}
+    T -- Có --> AC[Hiện đặt chỗ thật<br/>ẩn nút trial]
+    T -- Không --> TR[Hiện nút đặt chỗ thử nghiệm]
+
+    classDef done fill:#e4f6ef,stroke:#0f9d6f,color:#0a6b4c;
+    class AC done;
+        </pre>
+      </div>
+      <div class="note warn"><span class="ic">⚠️ Quy tắc ưu tiên quan trọng:</span> Nếu khách <strong>đang có đặt chỗ thật còn hiệu lực</strong>, Home luôn hiện đặt chỗ thật và <strong>ẩn nút thử nghiệm</strong>. Vé/ghế đang đặt hiển thị trạng thái (chưa/đã check-in) và ghế có <strong>đồng hồ đếm ngược</strong>.</div>
+    </section>
+
+    <section id="h-flow-takeout" data-keywords="luồng 10 mua mang về takeout 持ち帰り注文 open link booking btn function">
+      <h2><span class="n">10</span> Luồng: Mua mang về (持ち帰り注文)</h2>
+      <p>Nút mua mang về có <strong>3 trạng thái</strong> do máy chủ quyết định:</p>
+      <table>
+        <thead><tr><th>Trạng thái nút</th><th>Hiển thị</th><th>Bấm vào</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-gray">Ẩn</span></td><td>Không hiện nút</td><td>—</td></tr>
+          <tr><td><span class="badge b-blue">Mở liên kết</span></td><td>Hiện nút (nhãn + icon từ máy chủ)</td><td>Mở trang web/PDF bên ngoài</td></tr>
+          <tr><td><span class="badge b-green">Vào đặt chỗ</span></td><td>Hiện nút</td><td>Mở luồng đặt chỗ trong app</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="ic">ℹ️</span> Khi ở trạng thái "Mở liên kết" và đồng thời bật chế độ thử nghiệm, Home có thể hiện thêm nút đặt chỗ thử nghiệm bên dưới.</div>
+    </section>
+
+    <section id="h-flow-badge" data-keywords="luồng 11 dấu chưa đọc badge claim khiếu nại survey khảo sát notification thông báo unread">
+      <h2><span class="n">11</span> Luồng: Dấu "chưa đọc"</h2>
+      <p>Home tính toán và hiển thị <strong>dấu chấm đỏ</strong> trên biểu tượng menu khi có nội dung mới chưa đọc:</p>
+      <table>
+        <thead><tr><th>Loại</th><th>Khi nào có dấu</th></tr></thead>
+        <tbody>
+          <tr><td>Khiếu nại tích điểm (claim)</td><td>Có yêu cầu vừa đổi trạng thái / có tin nhắn mới</td></tr>
+          <tr><td>Khảo sát (survey)</td><td>Có khảo sát chưa hoàn thành</td></tr>
+          <tr><td>Coupon</td><td>Có coupon mới chưa xem</td></tr>
+          <tr><td>Thông báo (notification)</td><td>Có thông báo chưa đọc</td></tr>
+        </tbody>
+      </table>
+      <div class="note tip"><span class="ic">💡</span> Dấu chấm được cập nhật mỗi lần Home tải "Thông tin Home" và đồng bộ lên biểu tượng menu chung của app.</div>
+    </section>
+
+    <section id="h-enums" data-keywords="quy tắc trạng thái enum booking status popup type frequency takeout notice priority type">
+      <h2><span class="n">⚑</span> Bảng quy tắc trạng thái (enum)</h2>
+      <h3>Trạng thái đặt chỗ</h3>
+      <table>
+        <thead><tr><th>Trạng thái</th><th>Ý nghĩa</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-gray">Tắt tất cả</span></td><td>Ẩn cả nút đặt vé và đặt ghế</td></tr>
+          <tr><td><span class="badge b-green">Bật tất cả</span></td><td>Cho đặt vé hoặc đặt ghế</td></tr>
+          <tr><td><span class="badge b-blue">Chỉ đặt ghế</span></td><td>Chỉ cho đặt ghế</td></tr>
+          <tr><td><span class="badge b-blue">Chỉ đặt vé</span></td><td>Chỉ cho đặt vé</td></tr>
+          <tr><td><span class="badge b-orange">Thử nghiệm</span></td><td>Chỉ áp dụng cho cửa hàng thử nghiệm</td></tr>
+        </tbody>
+      </table>
+      <h3>Loại &amp; tần suất popup</h3>
+      <div class="grid2">
+        <div class="opt">
+          <h4>Loại popup</h4>
+          <ul>
+            <li><span class="badge b-blue">Thường</span> — tin tức/khuyến mãi</li>
+            <li><span class="badge b-red">Cập nhật</span> — nhắc cập nhật app (chỉ hiện khi đang dùng bản cũ)</li>
+          </ul>
+        </div>
+        <div class="opt">
+          <h4>Tần suất</h4>
+          <ul>
+            <li><span class="badge b-blue">1 lần duy nhất</span></li>
+            <li><span class="badge b-green">1 lần mỗi ngày</span></li>
+            <li><span class="badge b-orange">Luôn hiện</span></li>
+          </ul>
+        </div>
+      </div>
+      <h3>Nút mua mang về &amp; Thông báo</h3>
+      <table>
+        <thead><tr><th>Nhóm</th><th>Các giá trị</th></tr></thead>
+        <tbody>
+          <tr><td>Nút mua mang về</td><td>Ẩn · Mở liên kết · Vào đặt chỗ</td></tr>
+          <tr><td>Loại thông báo (notice)</td><td>Chữ (TEXT) · Ảnh (IMAGE)</td></tr>
+          <tr><td>Mức ưu tiên thông báo</td><td><span class="badge b-red">Cao</span> (icon cảnh báo đỏ) · Thường (icon thông tin đen)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="h-events" data-keywords="sự kiện home event reload toolbar goto coupon booking takeout tab changed lucky bag">
+      <h2><span class="n">⚡</span> Sự kiện Home (gửi cho phần còn lại của app)</h2>
+      <table>
+        <thead><tr><th>Sự kiện</th><th>Xảy ra khi</th></tr></thead>
+        <tbody>
+          <tr><td>Hiện thanh công cụ sau splash</td><td>Khi mở Home lần đầu sau màn khởi động</td></tr>
+          <tr><td>Tải lại thông tin Home</td><td>Khi cần làm mới dữ liệu</td></tr>
+          <tr><td>Tới màn Coupon</td><td>Khách bấm "Danh sách coupon" ở hộp thoại pizza/email</td></tr>
+          <tr><td>Mở đặt chỗ (thật / thử nghiệm)</td><td>Khách bấm nút đặt chỗ tương ứng</td></tr>
+          <tr><td>Mở mua mang về</td><td>Khách bấm nút mua mang về (chế độ đặt chỗ)</td></tr>
+          <tr><td>Khóa biểu tượng menu</td><td>Khi đang hiện tooltip (tránh bấm nhầm ra ngoài)</td></tr>
+          <tr><td>Chuyển tab</td><td>Khi khách vào/rời tab Home (bật/tắt tooltip phù hợp)</td></tr>
+          <tr><td>Cập nhật Túi may mắn</td><td>Khi dữ liệu Lucky Bag thay đổi</td></tr>
+          <tr><td>Hủy đăng nhập</td><td>Khi khách hủy đăng nhập từ màn Login</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="h-qa" data-keywords="điểm qa lưu ý edge case test kiểm thử thứ tự loading priority trial popup version">
+      <h2><span class="n">✓</span> Điểm QA cần lưu ý</h2>
+      <div class="card">
+        <ol>
+          <li><strong>Thứ tự tải dữ liệu:</strong> Banner → Thông tin Home → Đặt chỗ. Hộp thoại chỉ chạy sau khi cả 3 xong.</li>
+          <li><strong>Hàng đợi hộp thoại:</strong> hiện lần lượt theo ưu tiên cao→thấp, không chồng nhau.</li>
+          <li><strong>Tooltip:</strong> chỉ một lần/lần cài, sau cùng khi không còn hộp thoại.</li>
+          <li><strong>Ưu tiên đặt chỗ:</strong> đặt chỗ thật &gt; nút thử nghiệm.</li>
+          <li><strong>Tần suất popup:</strong> kiểm thử "1 lần/ngày" qua mốc đổi ngày (theo giờ máy chủ).</li>
+          <li><strong>Mất mạng:</strong> dùng banner đã lưu; tải lỗi → hộp thoại "Thử lại".</li>
+          <li><strong>Kéo làm mới:</strong> tải lại đúng và đầy đủ.</li>
+          <li><strong>Banner tự cuộn:</strong> dừng khi rời màn, chạy lại khi quay về.</li>
+          <li><strong>Cửa hàng gần nhất:</strong> luồng quyền vị trí + GPS + không có cửa hàng 20km.</li>
+          <li><strong>Kiểm tra phiên bản:</strong> đang dùng bản cũ → hiện cảnh báo cập nhật (ưu tiên cao nhất).</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="h-errors" data-keywords="lỗi thông báo mất mạng máy chủ thử lại リトライ 通信エラー サーバー">
+      <h2><span class="n">!</span> Thông báo lỗi người dùng có thể gặp</h2>
+      <table>
+        <thead><tr><th>Tình huống</th><th>Thông báo (gốc + dịch)</th><th>Khách cần làm</th></tr></thead>
+        <tbody>
+          <tr><td>Mất kết nối mạng</td><td><span class="jp">端末がインターネットに接続されていません。接続状況を確認してください。</span><span class="tran">Thiết bị chưa kết nối Internet. Hãy kiểm tra kết nối.</span></td><td>Kiểm tra mạng, bấm <span class="jp">リトライ</span> (Thử lại)</td></tr>
+          <tr><td>Lỗi liên lạc</td><td><span class="jp">通信エラーが発生しました。</span><span class="tran">Đã xảy ra lỗi liên lạc.</span></td><td>Thử lại sau</td></tr>
+          <tr><td>Máy chủ tạm lỗi</td><td><span class="jp">サーバー側で一時的に不具合が発生しています。</span><span class="tran">Máy chủ đang tạm gặp sự cố.</span></td><td>Đợi và thử lại</td></tr>
+          <tr><td>Quét QR không hợp lệ</td><td><span class="jp">久兵衛屋で発行した受付札を読取ってください。</span><span class="tran">Hãy quét phiếu tiếp nhận do 久兵衛屋 phát hành.</span></td><td>Quét đúng mã QR</td></tr>
+          <tr><td>Số đợi đã được gọi</td><td><span class="jp">この受付番号は案内済みです。</span><span class="tran">Số tiếp nhận này đã được gọi rồi.</span></td><td>—</td></tr>
+          <tr><td>QR không hỗ trợ</td><td><span class="jp">本QRコードの読取りはサポートされていません。カメラアプリから読取ください。</span><span class="tran">Mã QR này không được hỗ trợ. Hãy quét bằng ứng dụng camera.</span></td><td>Dùng camera hệ thống</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="h-faq" data-keywords="câu hỏi thường gặp faq popup tooltip banner đặt chỗ cửa hàng">
+      <h2><span class="n">?</span> Câu hỏi thường gặp</h2>
+      <details class="faq"><summary>Vì sao mở Home đôi khi hiện nhiều hộp thoại liên tiếp?</summary><div class="ans">Các hộp thoại được xếp hàng theo ưu tiên và hiện lần lượt sau khi dữ liệu tải xong — đóng cái này sẽ hiện cái tiếp theo nếu còn.</div></details>
+      <details class="faq"><summary>Tooltip hướng dẫn vì sao tôi chỉ thấy một lần?</summary><div class="ans">Tooltip thiết kế để hiện một lần đầu cho mỗi tính năng (quét QR, đặt chỗ). Sau khi xem, hệ thống ghi nhớ và không hiện lại.</div></details>
+      <details class="faq"><summary>Vì sao không thấy nút "Đặt chỗ thử nghiệm"?</summary><div class="ans">Nút thử nghiệm chỉ hiện khi máy chủ bật chế độ trial và khách <strong>chưa có đặt chỗ thật</strong>. Nếu đang có đặt chỗ thật, nút thử nghiệm bị ẩn.</div></details>
+      <details class="faq"><summary>Vì sao khối "Cửa hàng gần nhất" không hiện gì?</summary><div class="ans">Cần cấp quyền vị trí và bật GPS. Nếu không có cửa hàng trong bán kính 20km, sẽ hiển thị thông báo tương ứng.</div></details>
+      <details class="faq"><summary>Banner sao lúc chạy lúc đứng?</summary><div class="ans">Banner tự cuộn sẽ tạm dừng khi bạn mở trang web hoặc chuyển sang màn khác, và tự chạy lại khi quay về Home.</div></details>
+      <details class="faq"><summary>Tôi đang offline, vì sao vẫn thấy banner?</summary><div class="ans">Home dùng banner đã lưu trong máy để hiển thị tạm khi mất mạng; khi có mạng lại sẽ tự cập nhật bản mới.</div></details>
+      <p style="margin-top:30px"><a href="#h-overview">↑ Về đầu trang</a> · <a onclick="showPage('index')" style="cursor:pointer">← Trang tổng</a></p>
+    </section>
+  </main>
+</div>
+
+<!-- ============================================================= -->
+<!-- PAGE: CLAIM FLOW -->
+<!-- ============================================================= -->
+<div class="page layout" id="page-claim">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <button class="back-link" onclick="showPage('index')">← Trang tổng tính năng</button>
+      <h1>🧾 Tích điểm bằng ảnh hóa đơn</h1>
+      <div class="sub">Luồng xử lý trực quan · mọi vai trò đọc được</div>
+      <input type="text" class="search-input" placeholder="🔍 Tìm nội dung..." autocomplete="off">
+    </div>
+    <ul class="nav-list">
+      <li><a class="group" href="#c-overview">Tổng quan</a></li>
+      <li><a href="#c-overview">Cái nhìn tổng quan</a></li>
+      <li><a href="#c-master">Biểu đồ vòng đời yêu cầu</a></li>
+      <li><a href="#c-statemachine">Biểu đồ trạng thái (logic)</a></li>
+
+      <li><a class="group" href="#c-flow1">Các luồng xử lý</a></li>
+      <li><a href="#c-flow1">1. Gửi yêu cầu tích điểm</a></li>
+      <li><a href="#c-flow2">2. Xem lịch sử yêu cầu</a></li>
+      <li><a href="#c-flow3">3. Xem chi tiết &amp; trao đổi</a></li>
+      <li><a href="#c-flow4">4. Gửi lại ảnh</a></li>
+      <li><a href="#c-flow5">5. Xác nhận kết quả</a></li>
+
+      <li><a class="group" href="#c-status">Quy tắc</a></li>
+      <li><a href="#c-status">Các trạng thái yêu cầu</a></li>
+      <li><a href="#c-rules">Quy tắc &amp; điều kiện</a></li>
+      <li><a href="#c-badge">Logic dấu "có cập nhật"</a></li>
+
+      <li><a class="group" href="#c-errors">Tham chiếu</a></li>
+      <li><a href="#c-errors">Thông báo lỗi gặp phải</a></li>
+      <li><a href="#c-faq">Câu hỏi thường gặp</a></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+    <div class="no-results">Không tìm thấy nội dung khớp với từ khóa.</div>
+
+    <section id="c-overview" data-keywords="tổng quan overview dashboard giới thiệu tính năng tích điểm hóa đơn">
+      <div class="hero">
+        <h2><span class="n">i</span> Cái nhìn tổng quan</h2>
+        <p>Tính năng giúp khách hàng <strong>được cộng điểm thủ công</strong> khi quét hóa đơn tự động bị lỗi: chỉ cần <strong>chụp lại ảnh hóa đơn (レシート) và gửi đi</strong>, bộ phận xử lý sẽ kiểm tra và cộng điểm.</p>
+      </div>
+      <div class="dash">
+        <div class="tile"><div class="ic">📤</div><div class="num">5</div><div class="lbl">luồng nghiệp vụ chính</div></div>
+        <div class="tile"><div class="ic">⚑</div><div class="num">5</div><div class="lbl">trạng thái yêu cầu</div></div>
+        <div class="tile"><div class="ic">🖼️</div><div class="num">1</div><div class="lbl">ảnh / mỗi yêu cầu</div></div>
+        <div class="tile"><div class="ic">💬</div><div class="num">2</div><div class="lbl">bên trao đổi (khách ↔ xử lý)</div></div>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">Tính năng cho phép khách hàng:</h4>
+        <ul>
+          <li>📤 <strong>Gửi yêu cầu tích điểm</strong> kèm ảnh hóa đơn + lý do sự cố</li>
+          <li>📋 <strong>Xem lịch sử</strong> các yêu cầu đã gửi và trạng thái <span class="jp">履歴</span> <span style="color:var(--text-dim);font-size:.85rem">(lịch sử)</span></li>
+          <li>💬 <strong>Xem chi tiết</strong> + đọc tin nhắn trao đổi với bộ phận xử lý</li>
+          <li>🔄 <strong>Gửi lại ảnh</strong> khi bị yêu cầu chụp lại</li>
+          <li>✅ <strong>Xác nhận</strong> khi yêu cầu đã xử lý xong</li>
+        </ul>
+      </div>
+      <div class="note"><span class="ic">📌 Quy ước tài liệu:</span> Mọi đoạn chữ tiếng Nhật xuất hiện thật trong app được tô <span class="jp">màu tím</span> kèm bản dịch tiếng Việt nhỏ bên cạnh.</div>
+    </section>
+
+    <section id="c-master" data-keywords="biểu đồ vòng đời master flow tổng thể hành trình sơ đồ logic">
+      <h2><span class="n">★</span> Biểu đồ vòng đời một yêu cầu</h2>
+      <p class="lead">Toàn bộ hành trình từ lúc khách gửi đến khi khép lại, kèm các điểm rẽ nhánh quyết định.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ luồng tổng thể</div>
+        <pre class="mermaid">
+flowchart TD
+    A([Khách mở tính năng]) --> B[Chọn lý do sự cố]
+    B --> C{Lý do = その他<br/>Khác?}
+    C -- Có --> C1[Bắt buộc nhập mô tả]
+    C -- Không --> D[Đính kèm ảnh hóa đơn]
+    C1 --> D
+    D --> E{Ảnh hợp lệ?<br/>định dạng + dung lượng}
+    E -- Không --> E1[/Hiện cảnh báo<br/>chọn lại ảnh/]
+    E1 --> D
+    E -- Có --> F{Bấm Gửi 送信}
+    F --> G{Đủ điều kiện?<br/>có ảnh + có mạng}
+    G -- Thiếu --> G1[/Thông báo lỗi tương ứng/]
+    G1 --> D
+    G -- Đủ --> H[Gửi lên hệ thống]
+    H --> I[[受付 · Đang chờ xử lý]]
+    I --> J{Bộ phận xử lý<br/>kiểm tra ảnh}
+    J -- Ảnh chưa đạt --> K[[画像再送待ち · Chờ gửi lại ảnh]]
+    K --> L[Khách gửi ảnh mới]
+    L --> J
+    J -- Hợp lệ --> M[[対応完了 · Hoàn tất, cộng điểm]]
+    J -- Không hợp lệ --> N[[対応不可 · Không thể xử lý]]
+    M --> O{Khách xác nhận 確認}
+    N --> O
+    O --> P([Có thể xóa khỏi lịch sử])
+
+    classDef wait fill:#eceef2,stroke:#9aa3af,color:#4b5563;
+    classDef resend fill:#fdf1e1,stroke:#d97706,color:#9a5b08;
+    classDef done fill:#e4f6ef,stroke:#0f9d6f,color:#0a6b4c;
+    classDef reject fill:#fdeaea,stroke:#dc2626,color:#991b1b;
+    class I wait; class K resend; class M done; class N reject;
+        </pre>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:#eceef2;border:1px solid #9aa3af"></span> Đang chờ xử lý <span class="jp">受付</span></span>
+        <span><span class="dot" style="background:#fdf1e1;border:1px solid #d97706"></span> Chờ gửi lại ảnh <span class="jp">画像再送待ち</span></span>
+        <span><span class="dot" style="background:#e4f6ef;border:1px solid #0f9d6f"></span> Hoàn tất <span class="jp">対応完了</span></span>
+        <span><span class="dot" style="background:#fdeaea;border:1px solid #dc2626"></span> Không thể xử lý <span class="jp">対応不可</span></span>
+      </div>
+      <div class="note warn"><span class="ic">ℹ️ Nếu sơ đồ không hiện:</span> file cần kết nối Internet để vẽ biểu đồ (thư viện Mermaid). Nội dung chữ bên dưới vẫn đọc được bình thường khi offline.</div>
+    </section>
+
+    <section id="c-statemachine" data-keywords="biểu đồ trạng thái state machine logic chuyển trạng thái 受付 画像再送待ち 対応完了 対応不可">
+      <h2><span class="n">⚙</span> Biểu đồ trạng thái (logic xử lý)</h2>
+      <p class="lead">Sơ đồ này thể hiện <strong>quy tắc chuyển trạng thái</strong> và mỗi trạng thái cho phép khách làm gì.</p>
+      <div class="diagram">
+        <div class="cap">Máy trạng thái của một yêu cầu</div>
+        <pre class="mermaid">
+stateDiagram-v2
+    [*] --> 受付: Khách gửi yêu cầu
+    note right of 受付
+        受付 = Đang chờ xử lý
+        Không gửi lại ảnh / Không xác nhận
+    end note
+    受付 --> 画像再送待ち: Ảnh chưa đạt
+    受付 --> 対応完了: Duyệt hợp lệ
+    受付 --> 対応不可: Hóa đơn không hợp lệ
+    画像再送待ち --> 受付: Khách gửi ảnh mới
+    note left of 画像再送待ち
+        画像再送待ち = Chờ gửi lại ảnh
+        ✅ ĐƯỢC gửi lại ảnh
+    end note
+    対応完了 --> [*]: Khách xác nhận / xóa
+    対応不可 --> [*]: Khách xác nhận / xóa
+    note right of 対応完了
+        対応完了 = Hoàn tất (đã cộng điểm)
+        ✅ ĐƯỢC xác nhận
+    end note
+    note right of 対応不可
+        対応不可 = Không thể xử lý
+        ✅ ĐƯỢC xác nhận
+    end note
+        </pre>
+      </div>
+      <div class="note tip"><span class="ic">💡 Đọc hiểu nhanh:</span> Chỉ trạng thái <span class="badge b-resend">画像再送待ち</span> mới cho gửi lại ảnh; chỉ <span class="badge b-done">対応完了</span> và <span class="badge b-reject">対応不可</span> mới cho xác nhận. Khách <strong>không tự đổi trạng thái</strong> — do bộ phận xử lý quyết định.</div>
+    </section>
+
+    <section id="c-flow1" data-keywords="luồng 1 gửi yêu cầu tích điểm chụp ảnh lý do エラー画面が出た レシートの活字がにじんでいた その他 送信 validate">
+      <h2><span class="n">1</span> Luồng: Gửi yêu cầu tích điểm</h2>
+      <p class="lead">Luồng chính: chọn lý do → đính kèm ảnh → gửi.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ quyết định khi gửi</div>
+        <pre class="mermaid">
+flowchart LR
+    S([Bắt đầu]) --> R[Chọn lý do]
+    R --> Q{その他?<br/>Khác}
+    Q -- Có --> T[Nhập mô tả<br/>bắt buộc]
+    Q -- Không --> IMG[Đính kèm ảnh]
+    T --> IMG
+    IMG --> SEND{Bấm 送信<br/>Gửi}
+    SEND --> V1{Có ảnh?}
+    V1 -- Không --> W1[/レシート画像の<br/>添付をお願いします<br/>Vui lòng đính kèm ảnh/]
+    V1 -- Có --> V2{その他 mà<br/>mô tả trống?}
+    V2 -- Trống --> STOP[/Đứng yên,<br/>không gửi/]
+    V2 -- OK --> V3{Có mạng?}
+    V3 -- Không --> W2[/Thông báo lỗi mạng/]
+    V3 -- Có --> OK([Gửi thành công<br/>→ 受付])
+
+    classDef warnNode fill:#fdf1e1,stroke:#d97706,color:#9a5b08;
+    class W1,W2,STOP warnNode;
+        </pre>
+      </div>
+      <ol class="steps">
+        <li>
+          <div class="title">Chọn lý do gặp sự cố</div>
+          <div class="desc">3 lựa chọn:
+            <div class="jp-block"><span class="orig">エラー画面が出た</span><span class="tran">→ Màn hình bị báo lỗi</span></div>
+            <div class="jp-block"><span class="orig">レシートの活字がにじんでいた</span><span class="tran">→ Chữ trên hóa đơn bị nhòe</span></div>
+            <div class="jp-block"><span class="orig">その他</span><span class="tran">→ Khác (phải nhập mô tả, ô bắt buộc — <span class="jp">※この項目は必須入力です。</span> "Mục này bắt buộc nhập")</span></div>
+          </div>
+        </li>
+        <li>
+          <div class="title">Đính kèm ảnh hóa đơn</div>
+          <div class="desc">Nút <span class="jp">画像を添付</span> <span style="color:var(--text-dim);font-size:.85rem">(Đính kèm ảnh)</span>. Hệ thống hiện hướng dẫn chụp trước: <span class="jp">総合計</span> (tổng cộng) và <span class="jp">レシートNo</span> (số hóa đơn) phải rõ. Sau đó chọn nguồn: <span class="jp">カメラを起動</span> (mở camera) hoặc <span class="jp">写真をライブラリから選択</span> (chọn từ thư viện).</div>
+        </li>
+        <li>
+          <div class="title">Hệ thống kiểm tra &amp; nén ảnh</div>
+          <div class="desc">Ảnh tự động thu nhỏ + nén. Chỉ nhận png/jpg/jpeg, dung lượng gốc trong giới hạn.</div>
+        </li>
+        <li>
+          <div class="title">Xem lại trước khi gửi</div>
+          <div class="desc">Bấm vào ảnh để xem lại, hoặc xem ảnh mẫu <span class="jp">レシート見本</span> (mẫu hóa đơn) để đối chiếu.</div>
+        </li>
+        <li>
+          <div class="title">Bấm "Gửi" <span class="jp">送信</span></div>
+          <div class="desc">Hệ thống kiểm tra điều kiện (sơ đồ trên) rồi gửi, hiển thị màn hình chờ.</div>
+        </li>
+        <li>
+          <div class="title">Nhận kết quả</div>
+          <div class="desc">Thành công → thông báo đã tiếp nhận + nhắc giữ hóa đơn. Yêu cầu chuyển sang <span class="badge b-wait">受付 Đang chờ xử lý</span>.</div>
+        </li>
+      </ol>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Khi chọn <span class="jp">その他</span> mà bỏ trống mô tả rồi bấm Gửi, hệ thống <strong>chỉ đứng yên (không gửi), không báo lỗi rõ</strong>. Cần xác nhận đây là hành vi mong muốn.</div>
+    </section>
+
+    <section id="c-flow2" data-keywords="luồng 2 xem lịch sử danh sách 履歴 お問合せがありません tải trạng thái thử lại">
+      <h2><span class="n">2</span> Luồng: Xem lịch sử yêu cầu</h2>
+      <p class="lead">Xem lại tất cả yêu cầu đã gửi cùng trạng thái hiện tại.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ tải danh sách</div>
+        <pre class="mermaid">
+flowchart TD
+    O([Mở mục 履歴 Lịch sử]) --> N{Có mạng?}
+    N -- Không --> E[/Lỗi mạng + nút<br/>Thử lại/]
+    E --> N
+    N -- Có --> L[Tải danh sách mới nhất từ máy chủ]
+    L --> C{Danh sách rỗng?}
+    C -- Rỗng --> Z[/お問合せがありません<br/>Không có yêu cầu nào/]
+    C -- Có dữ liệu --> S[So sánh dữ liệu mới ↔ đã lưu]
+    S --> M[Đánh dấu yêu cầu vừa thay đổi = chưa đọc]
+    M --> D([Hiển thị danh sách])
+        </pre>
+      </div>
+      <ol class="steps">
+        <li><div class="title">Mở mục "Lịch sử"</div><div class="desc">Nút <span class="jp">申請履歴</span> / <span class="jp">履歴</span> (lịch sử yêu cầu).</div></li>
+        <li><div class="title">Tải danh sách mới nhất</div><div class="desc">Tự động lấy từ máy chủ, chỉ <strong>tải một lần mỗi lần vào</strong> để tránh gọi lặp.</div></li>
+        <li><div class="title">Hiển thị</div><div class="desc">Rỗng → <span class="jp">お問合せがありません。</span> <span style="color:var(--text-dim);font-size:.85rem">(Không có yêu cầu nào)</span>.</div></li>
+        <li><div class="title">Đối chiếu &amp; đánh dấu cập nhật</div><div class="desc">So sánh dữ liệu mới với dữ liệu đã lưu để phát hiện yêu cầu <strong>vừa thay đổi</strong> và đánh dấu "chưa đọc".</div></li>
+      </ol>
+      <div class="note danger"><span class="ic">⚠️ Lỗi:</span> Mất mạng / máy chủ lỗi → hộp thoại kèm nút <strong>Thử lại</strong> (gọi lại danh sách) và <strong>Hủy</strong>.</div>
+    </section>
+
+    <section id="c-flow3" data-keywords="luồng 3 chi tiết tin nhắn trao đổi đánh dấu đã đọc 申請日時 申請番号 màu">
+      <h2><span class="n">3</span> Luồng: Xem chi tiết &amp; trao đổi</h2>
+      <p class="lead">Bấm vào một yêu cầu để xem đầy đủ thông tin và tin nhắn trao đổi.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ rẽ nhánh theo trạng thái</div>
+        <pre class="mermaid">
+flowchart TD
+    A([Bấm 1 yêu cầu]) --> R[Đánh dấu đã đọc<br/>gỡ dấu chấm]
+    R --> V[Hiện ảnh + 申請日時 + 申請番号<br/>+ trạng thái + tin nhắn]
+    V --> S{Trạng thái?}
+    S -- 画像再送待ち --> A1[Hiện nút Gửi lại ảnh]
+    S -- 対応完了 / 対応不可 --> A2[Hiện nút 確認 Xác nhận]
+    S -- 受付 / その他 --> A3[Chỉ xem, không hành động]
+
+    classDef resend fill:#fdf1e1,stroke:#d97706,color:#9a5b08;
+    classDef done fill:#e4f6ef,stroke:#0f9d6f,color:#0a6b4c;
+    class A1 resend; class A2 done;
+        </pre>
+      </div>
+      <ol class="steps">
+        <li><div class="title">Bấm vào yêu cầu</div><div class="desc">Mở chi tiết và <strong>đánh dấu "đã đọc"</strong> (gỡ dấu chấm cập nhật).</div></li>
+        <li><div class="title">Xem thông tin</div><div class="desc">Ảnh hóa đơn, <span class="jp">申請日時</span> (ngày giờ gửi), <span class="jp">申請番号</span> (số yêu cầu), trạng thái + mô tả.</div></li>
+        <li><div class="title">Đọc tin nhắn trao đổi</div><div class="desc">Tin của hai bên phân biệt bằng <strong>màu sắc khác nhau</strong> (khách vs. bộ phận xử lý) để dễ theo dõi.</div></li>
+        <li><div class="title">Hành động theo trạng thái</div><div class="desc">Gửi lại ảnh (Luồng 4) hoặc xác nhận (Luồng 5); phóng to ảnh <span class="jp">画像タップで拡大できます</span> (chạm để phóng to); liên hệ qua email <span class="jp">お問い合わせ</span> (hỏi đáp).</div></li>
+      </ol>
+    </section>
+
+    <section id="c-flow4" data-keywords="luồng 4 gửi lại ảnh 画像再送待ち 画像を変更 resend chụp lại">
+      <h2><span class="n">4</span> Luồng: Gửi lại ảnh</h2>
+      <p class="lead">Chỉ khi yêu cầu ở trạng thái <span class="badge b-resend">画像再送待ち Chờ gửi lại ảnh</span>.</p>
+      <ol class="steps">
+        <li><div class="title">Mở yêu cầu "Chờ gửi lại ảnh"</div><div class="desc">Chỉ trạng thái này mới hiện chức năng — nút <span class="jp">画像を変更</span> (Thay ảnh).</div></li>
+        <li><div class="title">Chọn ảnh mới</div><div class="desc">Chụp/chọn ảnh rõ hơn.</div></li>
+        <li><div class="title">Gửi ảnh mới lên</div><div class="desc">Ảnh được gắn đúng yêu cầu đang xử lý.</div></li>
+        <li><div class="title">Bộ phận xử lý kiểm tra lại</div><div class="desc">Yêu cầu quay lại quy trình với ảnh mới.</div></li>
+      </ol>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Nút gửi lại ảnh <strong>chỉ xuất hiện ở 画像再送待ち</strong>; mọi trạng thái khác phải ẩn/khóa.</div>
+    </section>
+
+    <section id="c-flow5" data-keywords="luồng 5 xác nhận 確認 対応完了 対応不可 削除 xóa lịch sử">
+      <h2><span class="n">5</span> Luồng: Xác nhận kết quả</h2>
+      <p class="lead">Khi yêu cầu đã có kết quả: <span class="badge b-done">対応完了</span> hoặc <span class="badge b-reject">対応不可</span>.</p>
+      <ol class="steps">
+        <li><div class="title">Mở yêu cầu đã có kết quả</div><div class="desc">Hoàn tất hoặc Không thể xử lý.</div></li>
+        <li><div class="title">Bấm "Xác nhận" <span class="jp">確認</span></div><div class="desc">Hộp thoại xác nhận hiện ra; khách đồng ý để ghi nhận đã xem.</div></li>
+        <li><div class="title">Hoàn tất</div><div class="desc">Có thể xóa khỏi lịch sử — nút <span class="jp">削除</span> (Xóa). <span class="jp">削除を押すと本件は「履歴」から削除されます</span> <span style="color:var(--text-dim);font-size:.85rem">(Bấm Xóa thì mục này bị xóa khỏi "Lịch sử")</span>.</div></li>
+      </ol>
+      <div class="note tip"><span class="ic">💡</span> Lịch sử cộng điểm hiển thị ở màn thẻ thành viên: <span class="jp">その後の登録履歴は会員証画面「ポイント登録履歴」よりご確認ください。</span> <span style="color:var(--text-dim);font-size:.85rem">(Lịch sử đăng ký sau đó xem tại "Lịch sử tích điểm" ở màn thẻ thành viên)</span>.</div>
+    </section>
+
+    <section id="c-status" data-keywords="trạng thái 受付 画像再送待ち 対応完了 対応不可 その他 001 003 200 401 500 bảng">
+      <h2><span class="n">⚑</span> Các trạng thái của một yêu cầu</h2>
+      <p>Trạng thái quyết định khách <strong>được làm gì</strong>. Đây là phần cốt lõi của logic.</p>
+      <table>
+        <thead><tr><th>Mã</th><th>Trạng thái (gốc tiếng Nhật)</th><th>Ý nghĩa</th><th>Gửi lại ảnh?</th><th>Xác nhận?</th></tr></thead>
+        <tbody>
+          <tr><td>001</td><td><span class="badge b-wait">受付</span><span class="tran">Đang chờ xử lý</span></td><td>Vừa tiếp nhận, đang chờ kiểm tra</td><td>❌</td><td>❌</td></tr>
+          <tr><td>003</td><td><span class="badge b-resend">画像再送待ち</span><span class="tran">Chờ gửi lại ảnh</span></td><td>Ảnh chưa đạt, cần chụp lại</td><td>✅</td><td>❌</td></tr>
+          <tr><td>200</td><td><span class="badge b-done">対応完了</span><span class="tran">Hoàn tất</span></td><td>Đã xử lý xong &amp; cộng điểm</td><td>❌</td><td>✅</td></tr>
+          <tr><td>401</td><td><span class="badge b-reject">対応不可</span><span class="tran">Không thể xử lý</span></td><td>Hóa đơn không hợp lệ</td><td>❌</td><td>✅</td></tr>
+          <tr><td>500</td><td><span class="badge b-other">その他</span><span class="tran">Khác</span></td><td>Trường hợp đặc biệt khác</td><td>❌</td><td>❌</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><span class="ic">ℹ️ Cách đọc:</span> Hai cột cuối cho biết nút tương ứng <strong>có hiện ra hay không</strong> ở màn chi tiết — quy tắc cố định, không phụ thuộc thao tác khách.</div>
+    </section>
+
+    <section id="c-rules" data-keywords="quy tắc điều kiện ảnh định dạng dung lượng 20mb png jpg cộng điểm 7日間 giữ hóa đơn">
+      <h2><span class="n">§</span> Quy tắc &amp; điều kiện quan trọng</h2>
+      <div class="branch">
+        <div class="opt">
+          <h4>🖼️ Về ảnh hóa đơn</h4>
+          <ul>
+            <li>Chỉ nhận <strong>png / jpg / jpeg</strong> — <span class="jp">png、もしくはjpgファイルを添付してください。</span></li>
+            <li>Dung lượng gốc trong giới hạn — <span class="jp">添付できる画像は20MBまでです。</span> <span style="color:var(--text-dim);font-size:.85rem">(Tối đa 20MB)</span></li>
+            <li>Tự động <strong>nén &amp; thu nhỏ</strong> khi gửi</li>
+            <li>Chụp rõ <span class="jp">総合計</span> (tổng cộng) và <span class="jp">レシートNo</span> (số hóa đơn)</li>
+          </ul>
+        </div>
+        <div class="opt">
+          <h4>💰 Về điều kiện cộng điểm</h4>
+          <ul>
+            <li>✅ Hóa đơn phát hành tại cửa hàng của thương hiệu</li>
+            <li>❌ Hóa đơn nơi khác / đã cộng điểm trước đó</li>
+            <li>❌ Quá hạn (quá số ngày kể từ ngày phát hành — <span class="jp">7日間経過</span> "quá 7 ngày")</li>
+            <li>⚠️ Có thể bị yêu cầu gửi lại nếu ảnh thiếu phạm vi / không rõ</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note tip"><span class="ic">💡</span> Khách nên <strong>giữ lại hóa đơn giấy</strong> đến khi xử lý xong, phòng khi cần chụp lại.</div>
+    </section>
+
+    <section id="c-badge" data-keywords="dấu chấm chưa đọc badge cập nhật đồng bộ logic so sánh đánh dấu đã đọc">
+      <h2><span class="n">●</span> Logic dấu "có cập nhật"</h2>
+      <p>Khi một yêu cầu thay đổi (đổi trạng thái hoặc có tin nhắn mới), hệ thống hiện <strong>dấu chấm thông báo</strong> nhắc khách vào xem.</p>
+      <div class="diagram">
+        <div class="cap">Sơ đồ logic đánh dấu chưa đọc</div>
+        <pre class="mermaid">
+flowchart LR
+    L[Tải danh sách] --> C[So sánh dữ liệu mới ↔ đã lưu trong máy]
+    C --> D{Có thay đổi?<br/>đổi trạng thái / thêm tin nhắn}
+    D -- Có --> M[Gắn dấu chấm 'chưa đọc'<br/>+ báo lên màn hình chính]
+    D -- Không --> K[Giữ nguyên]
+    M --> O{Khách mở yêu cầu?}
+    O -- Có --> R[Gỡ dấu chấm<br/>+ cập nhật số đếm]
+    O -- Chưa --> M
+        </pre>
+      </div>
+      <div class="note warn"><span class="ic">⚠️ Điểm QA:</span> Dấu chấm <strong>chỉ mất sau khi khách thực sự mở yêu cầu</strong>; số đếm thông báo ở màn hình chính phải đồng bộ đúng.</div>
+    </section>
+
+    <section id="c-errors" data-keywords="lỗi thông báo mất mạng máy chủ ảnh chưa chọn quá dung lượng định dạng thử lại">
+      <h2><span class="n">!</span> Các thông báo lỗi người dùng có thể gặp</h2>
+      <table>
+        <thead><tr><th>Tình huống</th><th>Thông báo (gốc + dịch)</th><th>Khách cần làm</th></tr></thead>
+        <tbody>
+          <tr><td>Chưa chọn ảnh mà bấm Gửi</td><td><span class="jp">レシート画像の添付をお願いします。</span><span class="tran">Vui lòng đính kèm ảnh hóa đơn</span></td><td>Chọn ảnh rồi gửi lại</td></tr>
+          <tr><td>Ảnh quá dung lượng</td><td><span class="jp">添付できる画像は20MBまでです。</span><span class="tran">Ảnh tối đa 20MB</span></td><td>Chọn ảnh nhẹ hơn</td></tr>
+          <tr><td>Ảnh sai định dạng</td><td><span class="jp">png、もしくはjpgファイルを添付してください。</span><span class="tran">Đính kèm file png/jpg</span></td><td>Chọn đúng định dạng</td></tr>
+          <tr><td>Mất kết nối mạng</td><td><span class="jp">端末がインターネットに接続されていません。</span><span class="tran">Thiết bị chưa kết nối Internet</span></td><td>Kiểm tra mạng, thử lại</td></tr>
+          <tr><td>Máy chủ tạm lỗi</td><td><span class="jp">サーバー側で一時的に不具合が発生しています。</span><span class="tran">Máy chủ tạm gặp sự cố</span></td><td>Đợi và thử lại</td></tr>
+          <tr><td>Lỗi xác thực thiết bị</td><td>Hộp thoại lỗi kèm mã hỗ trợ</td><td>Liên hệ hỗ trợ nếu lặp lại</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="c-faq" data-keywords="câu hỏi thường gặp faq bao lâu giữ hóa đơn xóa điểm">
+      <h2><span class="n">?</span> Câu hỏi thường gặp</h2>
+      <details class="faq"><summary>Gửi xong bao lâu thì được cộng điểm?</summary><div class="ans">Cần một số ngày làm việc để kiểm tra hóa đơn. Khách kiểm tra lại trạng thái trong mục <span class="jp">履歴</span> (Lịch sử) sau vài ngày.</div></details>
+      <details class="faq"><summary>Vì sao không thấy nút "Gửi lại ảnh"?</summary><div class="ans">Nút chỉ hiện khi yêu cầu ở trạng thái <span class="jp">画像再送待ち</span> (Chờ gửi lại ảnh). Trạng thái khác sẽ không có.</div></details>
+      <details class="faq"><summary>Có cần giữ hóa đơn giấy không?</summary><div class="ans">Có. Giữ đến khi yêu cầu xử lý xong, phòng khi cần chụp lại.</div></details>
+      <details class="faq"><summary>Gửi nhiều hóa đơn cùng lúc được không?</summary><div class="ans">Mỗi lần gửi một hóa đơn. Có thể tạo nhiều yêu cầu riêng và theo dõi trong <span class="jp">履歴</span>.</div></details>
+      <details class="faq"><summary>Xóa yêu cầu có mất điểm đã cộng không?</summary><div class="ans">Không. Xóa <span class="jp">削除</span> chỉ ẩn khỏi lịch sử; điểm đã cộng vẫn xem được ở màn thẻ thành viên.</div></details>
+      <details class="faq"><summary>Vì sao có yêu cầu bị "Không thể xử lý"?</summary><div class="ans">Thường do hóa đơn không hợp lệ (<span class="jp">対応不可</span>): không phải của thương hiệu, đã cộng điểm, hoặc quá hạn. Khách bấm <span class="jp">確認</span> để khép lại.</div></details>
+      <p style="margin-top:30px"><a href="#c-overview">↑ Về đầu trang</a> · <a onclick="showPage('index')" style="cursor:pointer">← Trang tổng</a></p>
+    </section>
+  </main>
+</div>
 
 <script>
-  const search = document.getElementById('search');
-  const cards = Array.from(document.querySelectorAll('.feature'));
-  const noResults = document.getElementById('noResults');
-  search.addEventListener('input', () => {
-    const q = search.value.trim().toLowerCase();
-    let visible = 0;
-    cards.forEach(c => {
-      const kw = (c.getAttribute('data-keywords') || '') + ' ' + c.textContent.toLowerCase();
-      const match = q === '' || kw.toLowerCase().includes(q);
-      c.style.display = match ? '' : 'none';
-      if (match) visible++;
+  mermaid.initialize({ startOnLoad: false, theme: 'base', themeVariables: {
+    primaryColor: '#eaf1ff', primaryBorderColor: '#2563eb', primaryTextColor: '#1f2937',
+    lineColor: '#9aa3af', fontSize: '15px', fontFamily: 'Segoe UI, "Hiragino Sans", "Yu Gothic", sans-serif'
+  }});
+
+  // ---- SPA navigation with lazy Mermaid render ----
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + id);
+    if (!el) return;
+    el.classList.add('active');
+    window.scrollTo(0, 0);
+    const nodes = el.querySelectorAll('.mermaid:not([data-processed])');
+    if (nodes.length) {
+      try { mermaid.run({ nodes: Array.from(nodes) }); } catch (e) { console.error(e); }
+    }
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
+  }
+  window.showPage = showPage;
+
+  // ---- Per detail-page search + nav highlight ----
+  document.querySelectorAll('.page.layout').forEach(page => {
+    const search = page.querySelector('.search-input');
+    const sections = Array.from(page.querySelectorAll('section'));
+    const noResults = page.querySelector('.no-results');
+    if (search) {
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase();
+        let visible = 0;
+        sections.forEach(sec => {
+          const kw = (sec.getAttribute('data-keywords') || '') + ' ' + sec.textContent.toLowerCase();
+          const match = q === '' || kw.toLowerCase().includes(q);
+          sec.classList.toggle('hidden-by-search', !match);
+          if (match) visible++;
+        });
+        if (noResults) noResults.classList.toggle('show', visible === 0);
+      });
+    }
+    const navLinks = Array.from(page.querySelectorAll('.nav-list a[href^="#"]'));
+    const byId = {};
+    navLinks.forEach(a => byId[a.getAttribute('href').slice(1)] = a);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) {
+        navLinks.forEach(a => a.style.color = '');
+        const link = byId[e.target.id]; if (link) link.style.color = 'var(--accent)';
+      }});
+    }, { rootMargin: '-10% 0px -80% 0px' });
+    sections.forEach(s => observer.observe(s));
+  });
+
+  // ---- Index hub search ----
+  (function () {
+    const search = document.getElementById('indexSearch');
+    const cards = Array.from(document.querySelectorAll('#page-index .feature'));
+    const noResults = document.getElementById('indexNoResults');
+    if (!search) return;
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      let visible = 0;
+      cards.forEach(c => {
+        const kw = (c.getAttribute('data-keywords') || '') + ' ' + c.textContent.toLowerCase();
+        const match = q === '' || kw.toLowerCase().includes(q);
+        c.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      noResults.classList.toggle('show', visible === 0);
     });
-    noResults.classList.toggle('show', visible === 0);
-  });
+  })();
+
+  // ---- '/' focuses the active page's search ----
   document.addEventListener('keydown', e => {
-    if (e.key === '/' && document.activeElement !== search) { e.preventDefault(); search.focus(); }
+    if (e.key === '/') {
+      const active = document.querySelector('.page.active');
+      const s = active && active.querySelector('.search-input, #indexSearch');
+      if (s && document.activeElement !== s) { e.preventDefault(); s.focus(); }
+    }
   });
+
+  // ---- Open page from URL hash on load ----
+  (function () {
+    const h = (location.hash || '').replace('#', '');
+    if (h === 'home' || h === 'claim') showPage(h);
+  })();
 </script>
 </body>
 </html>
